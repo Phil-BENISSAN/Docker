@@ -1,0 +1,33 @@
+# version: "3.9"
+
+services:
+
+  # SERVICE STREAMLIT
+  streamlit:
+    build:
+      context: .
+    container_name: streamlit
+    ports:
+      - "8501:8501"
+    volumes:
+      - "./:/app"
+
+  # SERVICE DB POSTGRES
+  postgres:
+    image: postgres:latest
+    restart: always
+    container_name: postgres
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DBNAME}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST_AUTH_METHOD: 'trust'
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+
+volumes:
+  postgres_db:
